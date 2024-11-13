@@ -1,0 +1,216 @@
+package deborah.deborahworktoundersstand;
+
+/**
+ *
+ * @author deborah&elionne
+ */
+public class loan {
+     private double monthlyPayment;
+    private int numberOfYears;
+    private double totalAmount;
+
+    // Constructor
+    public loan(double monthlyPayment, int numberOfYears, double totalAmount) {
+        this.monthlyPayment = monthlyPayment;
+        this.numberOfYears = numberOfYears;
+        this.totalAmount = totalAmount;
+    }
+
+    // Getters and setters for each variable
+    public double getMonthlyPayment() {
+        return monthlyPayment;
+    }
+
+    public void setMonthlyPayment(double monthlyPayment) {
+        this.monthlyPayment = monthlyPayment;
+    }
+
+    public int getNumberOfYears() {
+        return numberOfYears;
+    }
+
+    public void setNumberOfYears(int numberOfYears) {
+        this.numberOfYears = numberOfYears;
+    }
+
+    public double getTotalAmount() {
+        return totalAmount;
+    }
+
+    public void setTotalAmount(double totalAmount) {
+        this.totalAmount = totalAmount;
+    }
+
+    // Method to calculate the total payment
+    public void calculateTotalAmount() {
+        this.totalAmount = this.monthlyPayment * this.numberOfYears * 12;
+    }
+
+    // Method to display loan details
+    public void displayLoanDetails() {
+        System.out.println("Monthly Payment: frw" + this.monthlyPayment);
+        System.out.println("Number of Years: " + this.numberOfYears);
+        System.out.println("Total Payment: frw" + this.totalAmount);
+    }
+
+    public static void main(String[] args) {
+        // Example usage
+        loan loan = new loan(500, 5, 0);
+        loan.calculateTotalAmount();
+        loan.displayLoanDetails();
+    }
+}
+----------------------------------------------------------------------------------
+import java.awt.FlowLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
+import javax.swing.JTextField;
+
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
+ */
+
+/**
+ *
+ * @author user
+ */
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+import java.sql.PreparedStatement;
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.*;
+import java.sql.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+public class StudentApplication {
+    
+public class StudentApp {
+    private JFrame frame;
+    private JTextField nameField;
+    private JTextField ageField;
+    private JTextField idField;
+    private JButton submitButton;
+    private JButton retrieveButton;
+    private JTextArea outputArea;
+    
+    // Database connection variables
+    private Connection connection;
+
+    public StudentApp() {
+        frame = new JFrame("Student Database");
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setSize(400, 400);
+        frame.setLayout(new FlowLayout());
+
+        // Input fields
+        frame.add(new JLabel("Student ID:"));
+        idField = new JTextField(20);
+        frame.add(idField);
+
+        frame.add(new JLabel("Name:"));
+        nameField = new JTextField(20);
+        frame.add(nameField);
+
+        frame.add(new JLabel("Age:"));
+        ageField = new JTextField(20);
+        frame.add(ageField);
+
+        // Buttons
+        submitButton = new JButton("Submit");
+        submitButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                submitStudent();
+            }
+        });
+        frame.add(submitButton);
+
+        retrieveButton = new JButton("Retrieve");
+        retrieveButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                retrieveStudent();
+            }
+        });
+        frame.add(retrieveButton);
+
+        // Output area
+        outputArea = new JTextArea(10, 30);
+        outputArea.setEditable(false);
+        frame.add(new JScrollPane(outputArea));
+
+        // Set up database connection
+                String jdbcUrl = "jdbc:mysql://localhost:3306/studentapp";
+        String username = "root";
+        String password = "";
+        try (Connection connection = DriverManager.getConnection(jdbcUrl, username, password)) {
+            System.out.println("Connected to the database.");
+        } catch (SQLException e) {
+            System.err.println("Connection failed.");
+            e.printStackTrace();
+        }}}
+
+        String jdbcUrl = "jdbc:mysql://localhost:3306/studentapp";
+        String username = "root";
+        String password = "";
+        //Create tables
+  
+    try(Connection connection = DriverManager.getConnection(jdbcUrl, username, password)){
+    try{
+        String createTableSQL = "CREATE TABLE students (" +
+                "id INT PRIMARY KEY AUTO_INCREMENT, " +
+                "name VARCHAR(50), " +
+                "age INT)";
+        Statement statement = connection.createStatement();
+        try {
+            statement.execute(createTableSQL);
+        } catch (SQLException ex) {
+            Logger.getLogger(StudentApplication.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        System.out.println("Table created.");
+    } catch (SQLException ex) {
+        Logger.getLogger(StudentApplication.class.getName()).log(Level.SEVERE, null, ex);
+    }
+}
+public void submitStudent(){
+String insertSQL = "INSERT INTO students (name, age) VALUES (?, ?)";
+try (
+Connection connect = DriverManager.getConnection(jdbcUrl, username, password);
+PreparedStatement preparedStatement = connect.prepareStatement(insertSQL)) {
+    preparedStatement.setString(1, "Elionne");
+    preparedStatement.setInt(2, 23);
+    preparedStatement.executeUpdate();
+    System.out.println("Record inserted.");
+} catch (SQLException e) {
+    e.printStackTrace();
+}
+}
+public  void retrieveStudent(){
+String selectSQL = "SELECT * FROM students";
+try (Statement statement = connection.createStatement()) {
+    ResultSet resultSet = statement.executeQuery(selectSQL);
+
+    while (resultSet.next()) {
+        int id = resultSet.getInt("id");
+        String name = resultSet.getString("name");
+        int age = resultSet.getInt("age");
+        System.out.printf("ID: %d, Name: %s, Age: %d%n", id, name, age);
+    }
+} catch (SQLException e) {
+    e.printStackTrace();
+}
+}
+public static void main(String[] args) {
+        new StudentApplication();
+}}
+    
+
+
